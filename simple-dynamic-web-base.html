@@ -1,0 +1,18 @@
+<html>
+
+<body>
+    <p id="text">I am a single web page.</p>
+
+    <script>
+        function add_element_function() {
+            let node = document.getElementById("text");
+            node.innerText +=  " I am another text page. ";
+            // node.appendChild(textnode);
+            // document.body.appendChild(node);
+        };
+
+        const intervalID = setInterval(add_element_function, 10000);
+
+    </script>
+</body>
+</html>
