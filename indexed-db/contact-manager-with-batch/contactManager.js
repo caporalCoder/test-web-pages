@@ -38,33 +38,41 @@ function addContact(name = '', phone = '') {
     };
 }
 
-function fetchContacts() {
-    const start = performance.now();
-    const transaction = db.transaction(['contacts'], 'readonly');
-    const store = transaction.objectStore('contacts');
-    const request = store.getAll();
-    const keyrequest = store.getAllKeys();
+// Fetch contacts with updated fetchMore method
+const batchSize = 5;
+let values, keyRange = null;
 
-    request.onsuccess = function(event) {
-        const contacts = event.target.result;
-        const contactList = document.getElementById('contactList');
-        contactList.innerHTML = '';
-
-        console.log(contacts);
-        contacts.forEach(contact => {
-            const li = document.createElement('li');
-            li.textContent = `${contact.name} - ${contact.phone}`;
-            contactList.appendChild(li);
-        });
-
-        const end = performance.now();
-        document.getElementById('performance').textContent = `Contacts loaded in ${(end - start).toFixed(2)} milliseconds.`;
-    };
-
-    keyrequest.onsuccess = function(event) {
-        console.log(event.target.result);
-    }
+function fetchMore() {
+  if (values && values.length === batchSize) {
+    keyRange = IDBKeyRange.lowerBound(values.at(-1).id, true);
+    values = undefined;
+    fetchContacts();
+  }
 }
+
+function fetchContacts() {
+  const transaction = db.transaction(['contacts'], 'readonly');
+  const store = transaction.objectStore('contacts');
+  store.getAll(keyRange, batchSize).onsuccess = e => {
+    values = e.target.result;
+    displayContacts(values);
+    fetchMore();
+  };
+}
+
+function displayContacts(contacts) {
+    const list = document.getElementById('contactList');
+   // list.innerHTML = ''; // Clear existing contacts
+    contacts.forEach(contact => {
+      const li = document.createElement('li');
+      li.textContent = `${contact.name} - ${contact.phone}`;
+      list.appendChild(li);
+    });
+    const li = document.createElement('li');
+    li.textContent = "------------------ Batch End ------------------";;
+    list.appendChild(li);
+  }
+
 
 function generateRandomContacts() {
     const count = document.getElementById('randomCount').value || 1;

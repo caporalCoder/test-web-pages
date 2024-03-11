@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Contact Manager</title>
+</head>
+<body>
+    <h2>Advanced Contact Manager</h2>
+    <div>
+        <input type="text" id="name" placeholder="Name">
+        <input type="text" id="phone" placeholder="Phone">
+        <button onclick="addContact()">Add Contact</button>
+        <button onclick="generateRandomContacts()">Generate Random Contacts</button>
+        <input type="number" id="randomCount" placeholder="Number of Contacts" style="width: 150px;">
+        <button onclick="deleteAllContacts()">Delete All Contacts</button> <!-- Delete All Contacts Button -->
+    </div>
+    <h3>Contacts</h3>
+    <ul id="contactList">
+        <!-- Contacts will be listed here -->
+    </ul>
+    <div id="performance"></div>
+
+    <script src="contactManager.js"></script>
+</body>
+</html>
